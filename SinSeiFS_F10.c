@@ -86,14 +86,17 @@ void vignette(char kode[])
 		{
 			if(islower(kode[i]))
 			{
-				if(kode[i] + (sisop[i % strlen(sisop)] - 64) <= 122)
+				//printf("%c %d\n", sisop[i % strlen(sisop)], kode[i]);
+				if(kode[i] + (sisop[i % strlen(sisop)] - 64) - 1 <= 122)
 				kode[i] += (sisop[i % strlen(sisop)] - 64) - 1;
 				else
 				kode[i] -= 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+				
+				//printf("%d\n", kode[i]);
 			}
 			else if(isupper(kode[i]))
 			{
-				if(kode[i] + (sisop[i % strlen(sisop)] - 64) <= 90)
+				if(kode[i] + (sisop[i % strlen(sisop)] - 64) - 1 <= 90)
 				kode[i] += (sisop[i % strlen(sisop)] - 64) - 1;
 				else
 				kode[i] -= 26 - (sisop[i % strlen(sisop)] - 64) + 1;
@@ -101,7 +104,6 @@ void vignette(char kode[])
 		}
 	}
 }
-
 void special(char kode[])
 {
 	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
