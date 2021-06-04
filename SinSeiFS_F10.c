@@ -51,6 +51,31 @@ void kodes(char kode[])
 	}
 }
 
+void kodes_balik(char kode[])
+{
+	int i;
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(isalpha(kode[i]))
+		{
+			if(islower(kode[i]))
+			{
+				if(kode[i] > 109)
+				kode[i] -= 13;
+				else
+				kode[i] += 13;
+			}
+			else if(isupper(kode[i]))
+			{
+				if(kode[i] > 77)
+				kode[i] -= 13;
+				else
+				kode[i] += 13;
+			}
+		}
+	}
+}
+
 void vignette(char kode[])
 {
 	int i, temp;
