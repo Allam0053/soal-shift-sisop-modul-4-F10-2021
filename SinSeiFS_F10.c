@@ -42,6 +42,32 @@ void kodes(char kode[])
 	}
 }
 
+void vignette(char kode[])
+{
+	int i, temp;
+	char* sisop = "SISOP";
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(isalpha(kode[i]))
+		{
+			if(islower(kode[i]))
+			{
+				if(kode[i] + (sisop[i % strlen(sisop)] - 64) <= 122)
+				kode[i] += (sisop[i % strlen(sisop)] - 64) - 1;
+				else
+				kode[i] -= 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+			}
+			else if(isupper(kode[i]))
+			{
+				if(kode[i] + (sisop[i % strlen(sisop)] - 64) <= 90)
+				kode[i] += (sisop[i % strlen(sisop)] - 64) - 1;
+				else
+				kode[i] -= 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+			}
+		}
+	}
+}
+
 int main(int argc, char const *argv[]) {
   
   return 0;
