@@ -1,8 +1,15 @@
+#define FUSE_USE_VERSION 28
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stlib.h>
 #include <math.h>
+#include <fuse.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <sys/time.h>
 
 void atbash(char kode[])
 {
