@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stlib.h>
+#include <math.h>
 
 void atbash(char kode[])
 {
@@ -66,6 +68,43 @@ void vignette(char kode[])
 			}
 		}
 	}
+}
+
+void special(char kode[])
+{
+	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
+	char angkachar[1000];
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(kode[i] == '.')
+		break;
+		if(isalpha(kode[i]) && isupper(kode[i]))
+		{
+			biner[i] = 1;
+			kode[i] = tolower(kode[i]);
+		}
+		else
+		{
+			biner[i] = 0;
+		}
+		//printf("%d", biner[i]);
+		j++;
+	}
+	//printf("\n%d\n", j);
+	j -= 1;
+	for(j; j >= 0; j--)
+	{
+		if(biner[j] != 0)
+		{
+			angka += pow(2, k);
+			//printf("%d\n", angka);
+		}
+		k++;
+	}
+	itoa(angka, angkachar, 10);
+	strcat(kode, ".");
+	strcat(kode, angkachar);
+//	printf("%d\n", angka);
 }
 
 int main(int argc, char const *argv[]) {
