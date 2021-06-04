@@ -104,6 +104,38 @@ void vignette(char kode[])
 		}
 	}
 }
+
+void vignette_balik(char kode[])
+{
+	int i, temp;
+	char* sisop = "SISOP";
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(isalpha(kode[i]))
+		{
+			if(islower(kode[i]))
+			{
+				//printf("%d %d\n", sisop[i % strlen(sisop)] - 65, kode[i]);
+				if(kode[i] - (sisop[i % strlen(sisop)] - 65) >= 97)
+				kode[i] -= (sisop[i % strlen(sisop)] - 65);
+				else
+				kode[i] += 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+				//else
+				//kode[i] += 
+				
+				//printf("%d\n", kode[i]);
+			}
+			else if(isupper(kode[i]))
+			{
+				if(kode[i] - (sisop[i % strlen(sisop)] - 65) >= 65)
+				kode[i] -= (sisop[i % strlen(sisop)] - 65);
+				else
+				kode[i] += 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+			}
+		}
+	}
+}
+
 void special(char kode[])
 {
 	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
