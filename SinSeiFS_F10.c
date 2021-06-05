@@ -105,7 +105,7 @@ void vignette(char kode[])
 	}
 }
 
-void vignette_balik(char kode[])
+/*void vignette_balik(char kode[])
 {
 	int i, temp;
 	char* sisop = "SISOP";
@@ -134,7 +134,7 @@ void vignette_balik(char kode[])
 			}
 		}
 	}
-}
+}*/
 
 void special(char kode[])
 {
