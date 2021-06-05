@@ -169,7 +169,7 @@ void special(char kode[])
 		k++;
 		j--;
 	}
-	itoa(angka, angkachar, 10);
+	sprintf(angkachar, "%d", angka);
 	strcat(kode, ".");
 	strcat(kode, angkachar);
 //	printf("%d\n", angka);
