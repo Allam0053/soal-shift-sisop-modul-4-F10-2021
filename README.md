@@ -117,8 +117,48 @@ e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan
 ### Soal 3
 Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital
 Baru bisa membuat fungsi untuk mengubah nama file menjadi lowercase dan menambah angka di belakangnya
-
+``
+void special(char kode[])
+{
+	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
+	char angkachar[1000];
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(kode[i] == '.')
+		break;
+		if(isalpha(kode[i]) && isupper(kode[i]))
+		{
+			biner[i] = 1;
+			kode[i] = tolower(kode[i]);
+		}
+		else
+		{
+			biner[i] = 0;
+		}
+		//printf("%d", biner[i]);
+		j++;
+	}
+	//printf("\n%d\n", j);
+	j -= 1;
+	//for(j; j >= 0; j--)
+	while(j >= 0)
+	{
+		if(biner[j] != 0)
+		{
+			angka += pow(2, k);
+			//printf("%d\n", angka);
+		}
+		k++;
+		j--;
+	}
+	sprintf(angkachar, "%d", angka);
+	strcat(kode, ".");
+	strcat(kode, angkachar);
+//	printf("%d\n", angka);
+}
+``
+Belum ada fungsi pembaliknya, karena menemui beberapa masalah yang berhubungan dengan string
 ### Masalah yang dihadapi
 1. Kurangnya referensi dari internet dan pemahamannya
 2. Kurangnya pemahaman dari isi-isi dari fungsi-fungsi fuse
-3. Sulitnya membaca, oleh manusia bukan laptop, hasil dari file dan directory yang dibaca oleh fungsi-fungsi fuse
+3. Sulitnya membaca, oleh manusia bukan laptop, hasil dari file dan directory yang dibaca oleh fungsi-fungsi fuse agar dapat mengetahui cara kerjanya fuse
