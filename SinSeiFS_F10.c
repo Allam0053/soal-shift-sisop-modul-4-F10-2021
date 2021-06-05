@@ -158,7 +158,8 @@ void special(char kode[])
 	}
 	//printf("\n%d\n", j);
 	j -= 1;
-	for(j; j >= 0; j--)
+	//for(j; j >= 0; j--)
+	while(j >= 0)
 	{
 		if(biner[j] != 0)
 		{
@@ -166,6 +167,7 @@ void special(char kode[])
 			//printf("%d\n", angka);
 		}
 		k++;
+		j--;
 	}
 	itoa(angka, angkachar, 10);
 	strcat(kode, ".");
