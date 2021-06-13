@@ -181,7 +181,7 @@ static void split_path(char * parent, char * child, char * by)
   parent[marker] = '\0';
 }
 ```
-d. Setiap encode, akan tercatap dalam log file
+d. Setiap encode, akan tercatap dalam log file. Cara penulisannya sama seperti pada soal nomor 4
 ## Fungsi log file encoding
 ```
 static void write_log(char level[], char cmd[], char arg1[], char arg2[])
@@ -215,53 +215,94 @@ static void write_log(char level[], char cmd[], char arg1[], char arg2[])
 e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal. Untuk sekarang, belum ada karena belum bisa mengetahui cara membaginya
 
 ### Soal 3
-Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital
-Baru bisa membuat fungsi untuk mengubah nama file menjadi lowercase dan menambah angka di belakangnya
+Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital. (Untuk yang ini belum bisa mengembalikan nama file dengan biner)
+
+
+Fungsi khusus soal ini terletak di salah satu fungsi fuse : xmp_readdir
 ```
-void special(char kode[])
+static int xmp_readdir(const char * path, void * buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info * fi)
 {
-	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
-	char angkachar[1000];
-	for(i = 0; i < strlen(kode); i++)
-	{
-		if(kode[i] == '.')
-		break;
-		if(isalpha(kode[i]) && isupper(kode[i]))
-		{
-			biner[i] = 1;
-			kode[i] = tolower(kode[i]);
-		}
-		else
-		{
-			biner[i] = 0;
-		}
-		//printf("%d", biner[i]);
-		j++;
-	}
-	//printf("\n%d\n", j);
-	j -= 1;
-	//for(j; j >= 0; j--)
-	while(j >= 0)
-	{
-		if(biner[j] != 0)
-		{
-			angka += pow(2, k);
-			//printf("%d\n", angka);
-		}
-		k++;
-		j--;
-	}
-	sprintf(angkachar, "%d", angka);
-	strcat(kode, ".");
-	strcat(kode, angkachar);
-//	printf("%d\n", angka);
+  (void)offset;
+  (void)fi;
+
+	printf("readdir:\n");
+	printf("%s\n", path);
+
+  char fpath[PATH_MAX];
+  pass_path(path, fpath, true);
+
+	printf("%s\n", fpath);
+
+  DIR *dp;
+  dp = opendir(fpath);
+  if (dp == NULL) {
+    return -errno;
+  }
+
+  bool is_special = false;
+  if (is_encrypted(path, "/A_is_a_")) {
+    char temp_path[PATH_MAX];
+    strcpy(temp_path, path);
+    char child_path[PATH_MAX];
+    split_path(temp_path, child_path, "RX_");
+    if (!strcmp(child_path, "")) {
+      is_special = true;
+    }
+  }
+
+  struct dirent *de;
+  while ((de = readdir(dp)) != NULL) {
+    if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) {
+      continue;
+    }
+  
+    struct stat st;
+    memset(&st, 0, sizeof(st));
+    st.st_ino = de->d_ino;
+    st.st_mode = de->d_type << 12;
+
+    int res = 0;
+    if (!is_special) {
+      if (is_encrypted(path, "/RX_") && strncmp(de->d_name, "A_is_a_", 8)) {
+        char item_name[PATH_MAX];
+        strcpy(item_name, de->d_name);
+        
+        printf("item_name: %s\n", item_name);
+
+        en_de_crypt_12(item_name, true);
+        
+        printf("item_name: %s\n", item_name);
+
+        res = (filler(buf, item_name, &st, 0));
+      } else if (is_encrypted(path, "/AtoZ_") && strncmp(de->d_name, "A_is_a_", 8)) {
+        char item_name[PATH_MAX];
+        strcpy(item_name, de->d_name);
+        
+        printf("item_name: %s\n", item_name);
+
+        en_de_crypt_12(item_name, false);
+        
+        printf("item_name: %s\n", item_name);
+
+        res = (filler(buf, item_name, &st, 0));
+      } else {
+        res = (filler(buf, de->d_name, &st, 0));
+      }
+    } else {
+      res = (filler(buf, de->d_name, &st, 0));
+    }
+
+    if (res != 0) {
+      break;
+    }
+  }
+
+  closedir(dp);
+  write_log("INFO", "READDIR", path, "");
+  return 0;
 }
 ```
-Belum ada fungsi pembaliknya, karena menemui beberapa masalah yang berhubungan dengan string
-
-Untuk fungsi-fungsi fusenya copas dari modul
+Untuk fungsi-fungsi fusenya diambil dari Modul 4 Sisop dan situs referensinya
 
 ### Masalah yang dihadapi
-1. Kurangnya referensi dari internet dan pemahamannya
-2. Kurangnya pemahaman dari isi-isi dari fungsi-fungsi fuse
-3. Sulitnya membaca, oleh manusia bukan laptop, hasil dari file dan directory yang dibaca oleh fungsi-fungsi fuse agar dapat mengetahui cara kerjanya fuse
+1. 
