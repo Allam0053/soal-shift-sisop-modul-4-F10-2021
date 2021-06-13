@@ -16,6 +16,22 @@ static char atbash_cipher(char ch)
   }
 }
 ```
+### screenshot
+#### keadaan awal
+![1](./img/1.png)
+#### 1.a
+![1](./img/1.a.png)
+#### 1.b
+![1](./img/1.b.1.png)
+![1](./img/1.b.2.png)
+#### 1.c
+![1](./img/1.c.1.png)
+![1](./img/1.c.2.png)
+#### 1.d
+![1](./img/1.d.png)
+#### 1.e
+![1](./img/1.e.png)
+
 
 Digunakan array upper_case yang berisi huruf besar dan lower_case yang berisi huruf kecil
 Untuk membalikan stringnya, bisa dipanggil fungsinya lagi, karena sandinya bisa berjalan secara dua arah
@@ -186,6 +202,21 @@ static void split_path(char * parent, char * child, char * by)
 ```
 e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal. Untuk sekarang, belum ada karena belum bisa mengetahui cara membaginya
 
+### screenshot
+#### keadaan awal
+![2](./img/2.png)
+#### 2.a
+![2](./img/2.a.png)
+#### 2.b
+![2](./img/2.b.1.png)
+![2](./img/2.b.2.png)
+#### 2.c
+![2](./img/2.c.1.png)
+![2](./img/2.c.2.png)
+#### 2.d
+![2](./img/2.d.1.png)
+![2](./img/2.d.2.png)
+
 ## Soal 3
 Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital. (Untuk yang ini belum bisa mengembalikan nama file dengan akhiran biner)
 
@@ -308,6 +339,8 @@ static void write_log(char level[], char cmd[], char arg1[], char arg2[])
   fclose(log_file);
 }
 ```
+### screenshot
+![4](./img/4.png)
 
 Proses-proses yang terjadi
 1. Setelah FUSE di-mount, fungsi fuse akan membaca direktori yang dituju, yang mana adalah folder Download
