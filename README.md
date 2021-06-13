@@ -304,5 +304,11 @@ static int xmp_readdir(const char * path, void * buf, fuse_fill_dir_t filler, of
 ```
 Untuk fungsi-fungsi fusenya diambil dari Modul 4 Sisop dan situs referensinya
 
+Proses-proses yang terjadi
+1. Setelah FUSE di-mount, fungsi fuse akan membaca direktori yang dituju
+
 ### Masalah yang dihadapi
-1. 
+1. Sering gagal mount pada directory tertentu
+2. Pemahaman FUSE masih perlu diperdalam
+3. Tidak dapat memecahkan sebuah file
+4. Soal 3 cukup kompleks
