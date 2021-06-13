@@ -305,7 +305,11 @@ static int xmp_readdir(const char * path, void * buf, fuse_fill_dir_t filler, of
 Untuk fungsi-fungsi fusenya diambil dari Modul 4 Sisop dan situs referensinya
 
 Proses-proses yang terjadi
-1. Setelah FUSE di-mount, fungsi fuse akan membaca direktori yang dituju
+1. Setelah FUSE di-mount, fungsi fuse akan membaca direktori yang dituju, yang mana adalah folder Download
+2. Dibaca isi dari folder Download, baik direktorinya maupun file-nya
+3. Jika ada perubahan nama direktori di dalamnya, maka perubahan tersebut akan dibaca oleh fungsi FUSE readdir
+4. Masing-masing perubahan nama menjadi nama tertentu ("Atoz_", "RX", "A_is_a_") akan mengubah nama direktori, dan direktori dan file di dalamnya, tergantung jenis perubahannya
+5. Jika nama direktori dikembalikan agar tidak ada nama-nama tertentu, maka nama file dan direktori dalamnya kembali seperti semula
 
 ### Masalah yang dihadapi
 1. Sering gagal mount pada directory tertentu
