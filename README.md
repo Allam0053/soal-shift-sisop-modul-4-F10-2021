@@ -1,9 +1,11 @@
 # soal-shift-sisop-modul-4-F10-2021
 
-### Soal 1
+## Soal 1
 Jika ada direktori dibuat atau direname dengan awalan AtoZ_, direktori dan isinya ter-encode Atbash. Jika diubah, akan ter-decode. Ini dilakukan secara rekursif jika ada direktori di dalam direktori tersebut
 
-## Fungsi Atbash
+Untuk menyandikan path string dengan Atbash adalah dengan mengubah masing-masing huruf ke sandi Atbash
+
+### Fungsi Atbash
 ```
 static char atbash_cipher(char ch)
 {
@@ -14,14 +16,15 @@ static char atbash_cipher(char ch)
   }
 }
 ```
+
 Digunakan array upper_case yang berisi huruf besar dan lower_case yang berisi huruf kecil
 Untuk membalikan stringnya, bisa dipanggil fungsinya lagi, karena sandinya bisa berjalan secara dua arah
 
-### Soal 2
+## Soal 2
 a. Jika direktori dibuat dengan awalan RX_, direktori dan isinya tersebut diencode pertama Atbash, lalu diikuti dengan ROT13
-Sandi ROT13 intinya hanya memindahkan masing-masing char 13 huruf ke arah kanan dari susunan alphabet (Atau ASCII). Untuk mengubahnya dengan sandi ROT13 dapat menggunakan fungsi ini
+Sandi ROT13 intinya hanya memindahkan masing-masing char 13 huruf ke arah kanan dari susunan alphabet (Atau ASCII). Untuk mengubahnya dengan sandi ROT13 dapat menggunakan fungsi ini, yang mana mengubah masing-masing huruf dalam path stringnya
 
-## Fungsi ROT13
+### Fungsi ROT13
 ```
 static char rot_13_cipher(char ch)
 {
@@ -44,7 +47,7 @@ static char rot_13_cipher(char ch)
 ```
 
 Karena ini merupakansandi ganda, maka ada penggabungan sandi Atbash dan ROT13, yang bisa menggunakan fungsi ini
-## Fungsi sandi rangkap Atbash dan ROT13, serta kebalikannya, untuk Atbash dan ROT13
+### Fungsi sandi rangkap Atbash dan ROT13, serta kebalikannya, untuk Atbash dan ROT13
 ```
 static void en_de_crypt_12(char * str, bool with_rot)
 {
@@ -78,7 +81,7 @@ b. Jika direktori di-rename dengan awalan RX_, direktori dan isinya diencode per
 Sandi Viginere mengubah masing-masing huruf ke arah kanan sebanyak sandi angka dari masing-masing huruf di key satu per satu dari kiri, lalu dikurangi 1.
 Fungsi ini menggabungkan sandi Atbash dan Vigenere dengan manipulasi ASCII
 
-## Fungsi Vigenere
+### Fungsi Vigenere
 ```
 static char * vigenere_cipher(char * str)
 {
@@ -108,7 +111,7 @@ c. Jika direktori di-rename dengan menghapuskan RX_, direktori kembali menjadi a
 
 Untuk mengecek apakah sebuah direktori atau file terenkode, dapat menggunakan fungsi pengecekan apakah string path direktori atau file terenkode
 
-## Fungsi Pengecekan
+### Fungsi Pengecekan
 ```
 static bool is_encrypted(char * path, char * by)
 {
@@ -120,7 +123,7 @@ static bool is_encrypted(char * path, char * by)
 }
 ```
 Jika terkode, maka akan dikodekan kembali seperti semula dengan menggunakan fungsi ini, sekaligus fungsi memulai penyandian
-## Fungsi persandian
+### Fungsi persandian
 ```
 static void pass_path(char * path, char * fpath, bool with_check)
 {
@@ -154,7 +157,7 @@ static void pass_path(char * path, char * fpath, bool with_check)
 }
 ```
 Diantara fungsi di bagian fungsi diatas, ada pemisahan path string, karena yang akan disandi sebagian dari path tersebut.
-## Fungsi pemisahan path string
+### Fungsi pemisahan path string
 ```
 static void split_path(char * parent, char * child, char * by)
 {
@@ -183,8 +186,8 @@ static void split_path(char * parent, char * child, char * by)
 ```
 e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal. Untuk sekarang, belum ada karena belum bisa mengetahui cara membaginya
 
-### Soal 3
-Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital. (Untuk yang ini belum bisa mengembalikan nama file dengan biner)
+## Soal 3
+Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital. (Untuk yang ini belum bisa mengembalikan nama file dengan akhiran biner)
 
 
 Fungsi khusus soal ini terletak di salah satu fungsi fuse : xmp_readdir
@@ -271,10 +274,11 @@ static int xmp_readdir(const char * path, void * buf, fuse_fill_dir_t filler, of
   return 0;
 }
 ```
-Untuk fungsi-fungsi fusenya diambil dari Modul 4 Sisop dan situs referensinya
+Untuk fungsi-fungsi fuse lainnya diambil dari Modul 4 Sisop dan situs referensinya, dengan ditambah modifikasi berdasarkan soal shift
 
-4. Setiap encode, baik dari soal nomor 1 dan 2, akan tercatap dalam log file. Cara penulisannya sama
-## Fungsi log file encoding
+## Soal 4
+Setiap encode, baik dari soal nomor 1 dan 2, akan tercatap dalam log file. Cara penulisannya sama untuk kedua soal
+### Fungsi log file encoding
 ```
 static void write_log(char level[], char cmd[], char arg1[], char arg2[])
 {
