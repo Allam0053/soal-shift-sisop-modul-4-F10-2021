@@ -181,37 +181,6 @@ static void split_path(char * parent, char * child, char * by)
   parent[marker] = '\0';
 }
 ```
-d. Setiap encode, akan tercatap dalam log file. Cara penulisannya sama seperti pada soal nomor 4
-## Fungsi log file encoding
-```
-static void write_log(char level[], char cmd[], char arg1[], char arg2[])
-{
-  char message[PATH_MAX];
-
-  time_t t_o = time(NULL);
-  struct tm tm_s = * localtime(&t_o);
-  sprintf(message, "%s::%02d%02d%d-%02d:%02d:%02d::%s", 
-    level, tm_s.tm_mday, tm_s.tm_mon + 1, tm_s.tm_year + 1900,
-    tm_s.tm_hour, tm_s.tm_min, tm_s.tm_sec, cmd);
-
-  if (strlen(arg1) != 0) {
-    strcat(message, "::");
-    strcat(message, arg1);
-  }
-
-  if (strlen(arg2) != 0) {
-    strcat(message, "::");
-    strcat(message, arg2);
-  }
-
-  char * file_name = "SinSeiFS.log";
-  FILE * log_file;
-  log_file = fopen(file_name, "a");
-  fprintf(log_file, "%s\n", message);
-
-  fclose(log_file);
-}
-```
 e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal. Untuk sekarang, belum ada karena belum bisa mengetahui cara membaginya
 
 ### Soal 3
@@ -303,6 +272,38 @@ static int xmp_readdir(const char * path, void * buf, fuse_fill_dir_t filler, of
 }
 ```
 Untuk fungsi-fungsi fusenya diambil dari Modul 4 Sisop dan situs referensinya
+
+4. Setiap encode, baik dari soal nomor 1 dan 2, akan tercatap dalam log file. Cara penulisannya sama
+## Fungsi log file encoding
+```
+static void write_log(char level[], char cmd[], char arg1[], char arg2[])
+{
+  char message[PATH_MAX];
+
+  time_t t_o = time(NULL);
+  struct tm tm_s = * localtime(&t_o);
+  sprintf(message, "%s::%02d%02d%d-%02d:%02d:%02d::%s", 
+    level, tm_s.tm_mday, tm_s.tm_mon + 1, tm_s.tm_year + 1900,
+    tm_s.tm_hour, tm_s.tm_min, tm_s.tm_sec, cmd);
+
+  if (strlen(arg1) != 0) {
+    strcat(message, "::");
+    strcat(message, arg1);
+  }
+
+  if (strlen(arg2) != 0) {
+    strcat(message, "::");
+    strcat(message, arg2);
+  }
+
+  char * file_name = "SinSeiFS.log";
+  FILE * log_file;
+  log_file = fopen(file_name, "a");
+  fprintf(log_file, "%s\n", message);
+
+  fclose(log_file);
+}
+```
 
 Proses-proses yang terjadi
 1. Setelah FUSE di-mount, fungsi fuse akan membaca direktori yang dituju, yang mana adalah folder Download
