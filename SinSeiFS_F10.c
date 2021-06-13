@@ -109,39 +109,75 @@ static char * vigenere_cipher(char * str)
   return str;
 }
 
-static void en_de_crypt_12(char * str, bool with_rot)
+/*void vignette_balik(char kode[])
 {
-  char item_name[PATH_MAX];
-  strcpy(item_name, str);
-  char ext[PATH_MAX];
-
-  int size = strlen(str);
-  for (int i = strlen(str); i >= 0; i--) {
-    if (str[i] == '.') {
-      size = i;
-      break;
-    }
-  }
-
-  for (int i = 0; i < size; i++) {
-    if(!isalpha(str[i])) {
-      continue;
-    }
-
-    str[i] = atbash_cipher(str[i]);
-    if (with_rot) {
-      str[i] = rot_13_cipher(str[i]);
-    }
-  }
-}
+	int i, temp;
+	char* sisop = "SISOP";
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(isalpha(kode[i]))
+		{
+			if(islower(kode[i]))
+			{
+				//printf("%d %d\n", sisop[i % strlen(sisop)] - 65, kode[i]);
+				if(kode[i] - (sisop[i % strlen(sisop)] - 65) >= 97)
+				kode[i] -= (sisop[i % strlen(sisop)] - 65);
+				else
+				kode[i] += 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+				//else
+				//kode[i] += 
+				
+				//printf("%d\n", kode[i]);
+			}
+			else if(isupper(kode[i]))
+			{
+				if(kode[i] - (sisop[i % strlen(sisop)] - 65) >= 65)
+				kode[i] -= (sisop[i % strlen(sisop)] - 65);
+				else
+				kode[i] += 26 - (sisop[i % strlen(sisop)] - 64) + 1;
+			}
+		}
+	}
+}*/
 
 static bool is_encrypted(char * path, char * by)
 {
-  if (strstr(path, by)) {
-    return true;
-  }
-
-  return false;
+  char kode[100];
+	int biner[strlen(kode)], i, angka = 0, j = 0, k = 0;
+	char angkachar[1000];
+	for(i = 0; i < strlen(kode); i++)
+	{
+		if(kode[i] == '.')
+		break;
+		if(isalpha(kode[i]) && isupper(kode[i]))
+		{
+			biner[i] = 1;
+			kode[i] = tolower(kode[i]);
+		}
+		else
+		{
+			biner[i] = 0;
+		}
+		//printf("%d", biner[i]);
+		j++;
+	}
+	//printf("\n%d\n", j);
+	j -= 1;
+	//for(j; j >= 0; j--)
+	while(j >= 0)
+	{
+		if(biner[j] != 0)
+		{
+			angka += pow(2, k);
+			//printf("%d\n", angka);
+		}
+		k++;
+		j--;
+	}
+	sprintf(angkachar, "%d", angka);
+	strcat(kode, ".");
+	strcat(kode, angkachar);
+//	printf("%d\n", angka);
 }
 
 static void split_path(char * parent, char * child, char * by)
