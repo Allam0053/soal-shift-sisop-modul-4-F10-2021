@@ -44,7 +44,7 @@ static char rot_13_cipher(char ch)
 ```
 
 Karena ini merupakansandi ganda, maka ada penggabungan sandi Atbash dan ROT13, yang bisa menggunakan fungsi ini
-##Fungsi sandi rangkap Atbash dan ROT13
+## Fungsi sandi rangkap Atbash dan ROT13, serta kebalikannya, untuk Atbash dan ROT13
 ```
 static void en_de_crypt_12(char * str, bool with_rot)
 {
@@ -72,11 +72,13 @@ static void en_de_crypt_12(char * str, bool with_rot)
   }
 }
 ```
+Fungsi diatas juga akan mengecek apakah sandi yang digunakan menggunakan Vigenere atau ROT13, dengan menggunakan argumen with_rot
 
 b. Jika direktori di-rename dengan awalan RX_, direktori dan isinya diencode pertama dengan Atbash, lalu dengan Vigenere dengan key "SISOP"
 Sandi Viginere mengubah masing-masing huruf ke arah kanan sebanyak sandi angka dari masing-masing huruf di key satu per satu dari kiri, lalu dikurangi 1.
+Fungsi ini menggabungkan sandi Atbash dan Vigenere dengan manipulasi ASCII
 
-## Fungsi Viginere
+## Fungsi Vigenere
 ```
 static char * vigenere_cipher(char * str)
 {
@@ -105,7 +107,8 @@ static char * vigenere_cipher(char * str)
 c. Jika direktori di-rename dengan menghapuskan RX_, direktori kembali menjadi aslinya, tergantung jenis encodingnya, mengingat ada dua cara
 
 Untuk mengecek apakah sebuah direktori atau file terenkode, dapat menggunakan fungsi pengecekan apakah string path direktori atau file terenkode
-##Fungsi Pengecekan
+
+## Fungsi Pengecekan
 ```
 static bool is_encrypted(char * path, char * by)
 {
@@ -116,34 +119,100 @@ static bool is_encrypted(char * path, char * by)
   return false;
 }
 ```
+Jika terkode, maka akan dikodekan kembali seperti semula dengan menggunakan fungsi ini, sekaligus fungsi memulai penyandian
+## Fungsi persandian
 ```
-void kodes_balik(char kode[])
+static void pass_path(char * path, char * fpath, bool with_check)
 {
-	int i;
-	for(i = 0; i < strlen(kode); i++)
-	{
-		if(isalpha(kode[i]))
-		{
-			if(islower(kode[i]))
-			{
-				if(kode[i] > 109)
-				kode[i] -= 13;
-				else
-				kode[i] += 13;
-			}
-			else if(isupper(kode[i]))
-			{
-				if(kode[i] > 77)
-				kode[i] -= 13;
-				else
-				kode[i] += 13;
-			}
-		}
-	}
+  if (strcmp(path, "/") == 0) {
+    sprintf(fpath, "%s", dirpath);
+  } else {
+    if (with_check) {
+      if (is_encrypted(path, "/RX_")) {
+        char temp_path[PATH_MAX];
+        strcpy(temp_path, path);
+        char child_path[PATH_MAX];
+        split_path(temp_path, child_path, "RX_");
+
+        en_de_crypt_12(child_path, true);
+        sprintf(fpath, "%s%s%s", dirpath, temp_path, child_path);
+      } else if (is_encrypted(path, "/AtoZ_")) {
+        char temp_path[PATH_MAX];
+        strcpy(temp_path, path);
+        char child_path[PATH_MAX];
+        split_path(temp_path, child_path, "AtoZ_");
+
+        en_de_crypt_12(child_path, false);
+        sprintf(fpath, "%s%s%s", dirpath, temp_path, child_path);
+      } else {
+        sprintf(fpath, "%s%s", dirpath, path);
+      }
+    } else {
+      sprintf(fpath, "%s%s", dirpath, path);
+    }
+  }
+}
+```
+Diantara fungsi di bagian fungsi diatas, ada pemisahan path string, karena yang akan disandi sebagian dari path tersebut.
+## Fungsi pemisahan path string
+```
+static void split_path(char * parent, char * child, char * by)
+{
+  char fpath[PATH_MAX];
+  strcpy(fpath, parent);
+  char * substr = strtok(fpath, "/");
+
+  int counter = 0;
+  int marker = 0;
+  while(substr != NULL) {
+    counter++;
+    counter += strlen(substr);
+
+    if (!strncmp(substr, by, strlen(by))) {
+      marker = counter;
+    }
+
+    if (substr != NULL) {
+      substr = strtok(NULL, "/");
+    }
+  }
+
+  strcpy(child, &parent[marker]);
+  parent[marker] = '\0';
 }
 ```
 d. Setiap encode, akan tercatap dalam log file
-e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal
+## Fungsi log file encoding
+```
+static void write_log(char level[], char cmd[], char arg1[], char arg2[])
+{
+  char message[PATH_MAX];
+
+  time_t t_o = time(NULL);
+  struct tm tm_s = * localtime(&t_o);
+  sprintf(message, "%s::%02d%02d%d-%02d:%02d:%02d::%s", 
+    level, tm_s.tm_mday, tm_s.tm_mon + 1, tm_s.tm_year + 1900,
+    tm_s.tm_hour, tm_s.tm_min, tm_s.tm_sec, cmd);
+
+  if (strlen(arg1) != 0) {
+    strcat(message, "::");
+    strcat(message, arg1);
+  }
+
+  if (strlen(arg2) != 0) {
+    strcat(message, "::");
+    strcat(message, arg2);
+  }
+
+  char * file_name = "SinSeiFS.log";
+  FILE * log_file;
+  log_file = fopen(file_name, "a");
+  fprintf(log_file, "%s\n", message);
+
+  fclose(log_file);
+}
+```
+e. File-file dalam direktori dipecah menjadi 1024 bytes, tapi jika diakses, akan menjadi normal. Untuk sekarang, belum ada karena belum bisa mengetahui cara membaginya
 
 ### Soal 3
 Jika ada direktori dibuat atau di-rename dengan awalan A_is_a_, maka nama direktori tersebut akan menjadi direktori spesial. Jika dihapus A_is_a-nya, maka direktori tersebu menjadi normal. Semua folder di-dalamnya akan di-lowercase-kan dan ditambahkan sebuah angka yang menjadi hasil desimal dari biner dari huruf-huruf yang kapital
